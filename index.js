@@ -16,6 +16,7 @@ app.get('/:date?', async (req, res) => {
         const menu = await fetchMenu(date);
         return res.json(menu).status(200);
     } catch (err) {
+        logger.error(err.message);
         return res.json({
             error: err.message
         }).status(400);
@@ -26,6 +27,7 @@ app.use((req, res) => {
     res.sendStatus(404);
 });
 
-app.listen(8091, () => {
-    console.log('Im alive!');
+const port = process.env.PORT || 8090;
+app.listen(port, (server) => {
+    logger.info(`Server started, running on port ${port}`);
 });

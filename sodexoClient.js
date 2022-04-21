@@ -1,8 +1,9 @@
 const axios = require('axios');
 const config = require('./config.json');
 const cheerio = require('cheerio');
-
+const logger = require('./logger');
 const NodeCache = require('node-cache');
+
 const cache = new NodeCache();
 
 const parseResponseData = (data) => {
@@ -79,11 +80,13 @@ const fetchMenu = async (date) => {
     }
 
     if (cache.has(url)) {
+        logger.debug(`Menu found in cache! date: ${date}`)
         return {
             ...cache.get(url),
             sodexoResponseMs: 0
         }
     } else {
+        logger.debug(`Reading menu from date: ${date}`)
         const requestStart = Date.now();
         const { data } = await axios.get(url);
         const requestEnd = Date.now();
